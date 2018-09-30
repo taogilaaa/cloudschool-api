@@ -1,0 +1,67 @@
+type User {
+  id: ID! @unique
+  firstName: String!
+  lastName: String!
+  email: String! @unique
+  password: String!
+  photoUrl: String
+  type: UserType! @default(value: Student)
+  active: Boolean! @default(value: "true")
+  batches: [Batch!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum UserType {
+  Student
+  Lecturer
+  Administrator
+}
+
+type Batch {
+  id: ID! @unique
+  name: String! @unique
+  students: [User!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Course {
+  id: ID! @unique
+  name: String!
+  description: String!
+  topics: [Topic!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Topic {
+  id: ID! @unique
+  name: String!
+  order: Int!
+  stages: [Stage!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Stage {
+  id: ID! @unique
+  name: String!
+  transcript: String!
+  videoUrl: String!
+  order: Int!
+  duration: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type LearningProgram {
+  id: ID! @unique
+  batch: Batch!
+  course: Course!
+  lecturer: User!
+  startDate: DateTime!
+  endDate: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
