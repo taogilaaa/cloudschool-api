@@ -9,6 +9,7 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "flow",
     "test-src": "jest",
+    "test-travis": "npm run lint && npm run typecheck",
     "start:dev": "nodemon src/main.js --exec babel-node  --presets es2015-native-generators,stage-2",
     "start": "node lib/main.js",
     "test": "npm run lint && npm run typecheck"
