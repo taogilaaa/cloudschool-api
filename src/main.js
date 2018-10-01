@@ -1,12 +1,8 @@
+// @flow
 import {GraphQLServer} from 'graphql-yoga';
 import {PORT} from './globals/constants';
 import {db} from './globals/prisma';
-
-const resolvers = {
-  Query: {
-    hello: (_, {name}) => `Hello ${name || 'World'}`,
-  },
-};
+import * as resolvers from './resolvers';
 
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
