@@ -1,11 +1,6 @@
 import {GraphQLServer} from 'graphql-yoga';
 import {PORT} from './globals/constants';
-
-const typeDefs = `
-  type Query {
-    hello(name: String): String!
-  }
-`;
+import {db} from './globals/prisma';
 
 const resolvers = {
   Query: {
@@ -13,7 +8,15 @@ const resolvers = {
   },
 };
 
-const server = new GraphQLServer({typeDefs, resolvers});
+const server = new GraphQLServer({
+  typeDefs: './src/schema.graphql',
+  resolvers,
+  context: (req) => ({
+    ...req,
+    db,
+  }),
+});
+
 server.start(
   {
     port: PORT,
