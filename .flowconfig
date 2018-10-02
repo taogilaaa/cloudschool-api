@@ -1,6 +1,9 @@
 [ignore]
 # Ignore compiled code.
 <PROJECT_ROOT>/lib/.*
+.*/node_modules/graphql/error/locatedError.js
+.*/node_modules/graphql/subscription/mapAsyncIterator.js
+.*/node_modules/graphql/jsutils/objectValues.js
 
 [include]
 
