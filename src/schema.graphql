@@ -1,0 +1,17 @@
+# import * from "./generated/prisma.graphql"
+
+type Query {
+  learningPrograms: [LearningProgram]!
+  courses: [Course]!
+  batches: [Batch]!
+  stages: [Stage]!
+  topics: [Topic]!
+  users: [User]!
+  
+  learningProgram(id: ID!): LearningProgram
+  course(id: ID!): Course
+  batch(id: ID!): Batch
+  stage(id: ID!): Stage
+  topic(id: ID!): Topic
+  user(id: ID!): User
+}
