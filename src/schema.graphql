@@ -15,3 +15,87 @@ type Query {
   topic(id: ID!): Topic
   user(id: ID!): User
 }
+
+type Mutation {
+  createBatch(
+    name: String!
+  ): Batch!
+  createCourse(
+    name: String!
+    description: String!
+  ): Course!
+  createLearningProgram(
+    batchId: ID!
+    courseId: ID!
+    lecturerId: ID!
+    startDate: DateTime!
+    endDate: DateTime!
+  ): LearningProgram!
+  createStage(
+    name: String!
+    transcript: String!
+    videoUrl: String!
+    order: Int!
+    #TODO: Get duration from video API maybe ?
+    duration: Int!
+  ): Stage!
+  createTopic(
+    name: String!
+    order: Int!
+  ): Topic!
+  createUser(
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+    photoUrl: String!
+    type: UserType
+    active: Boolean
+  ): User!
+
+  updateBatch(
+    id: ID!
+    name: String
+  ): Batch
+  updateCourse(
+    id: ID!
+    name: String
+    description: String
+  ): Course
+  updateLearningProgram(
+    id: ID!
+    batchId: ID
+    courseId: ID
+    lecturerId: ID
+    startDate: DateTime
+    endDate: DateTime
+  ): LearningProgram
+  updateStage(
+    id: ID!
+    name: String
+    transcript: String
+    videoUrl: String
+    order: Int
+    duration: Int
+  ): Stage
+  updateTopic(
+    id: ID!
+    name: String
+    order: Int
+  ): Topic
+  updateUser(
+    email: String!
+    firstName: String
+    lastName: String
+    password: String
+    photoUrl: String
+    type: UserType
+    active: Boolean
+  ): User
+
+  deleteBatch(id: ID!): Batch
+  deleteCourse(id: ID!): Course
+  deleteLearningProgram(id: ID!): LearningProgram
+  deleteStage(id: ID!): Stage
+  deleteTopic(id: ID!): Topic
+}
