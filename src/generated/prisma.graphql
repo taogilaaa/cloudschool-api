@@ -341,12 +341,22 @@ type CourseConnection {
 input CourseCreateInput {
   name: String!
   description: String!
-  topics: TopicCreateManyInput
+  topics: TopicCreateManyWithoutCourseInput
 }
 
 input CourseCreateOneInput {
   create: CourseCreateInput
   connect: CourseWhereUniqueInput
+}
+
+input CourseCreateOneWithoutTopicsInput {
+  create: CourseCreateWithoutTopicsInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseCreateWithoutTopicsInput {
+  name: String!
+  description: String!
 }
 
 """An edge in a connection."""
@@ -421,13 +431,13 @@ input CourseSubscriptionWhereInput {
 input CourseUpdateDataInput {
   name: String
   description: String
-  topics: TopicUpdateManyInput
+  topics: TopicUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateInput {
   name: String
   description: String
-  topics: TopicUpdateManyInput
+  topics: TopicUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateOneRequiredInput {
@@ -437,9 +447,26 @@ input CourseUpdateOneRequiredInput {
   upsert: CourseUpsertNestedInput
 }
 
+input CourseUpdateOneRequiredWithoutTopicsInput {
+  create: CourseCreateWithoutTopicsInput
+  connect: CourseWhereUniqueInput
+  update: CourseUpdateWithoutTopicsDataInput
+  upsert: CourseUpsertWithoutTopicsInput
+}
+
+input CourseUpdateWithoutTopicsDataInput {
+  name: String
+  description: String
+}
+
 input CourseUpsertNestedInput {
   update: CourseUpdateDataInput!
   create: CourseCreateInput!
+}
+
+input CourseUpsertWithoutTopicsInput {
+  update: CourseUpdateWithoutTopicsDataInput!
+  create: CourseCreateWithoutTopicsInput!
 }
 
 input CourseWhereInput {
@@ -885,41 +912,41 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
+  createTopic(data: TopicCreateInput!): Topic!
+  createStage(data: StageCreateInput!): Stage!
   createLearningProgram(data: LearningProgramCreateInput!): LearningProgram!
   createCourse(data: CourseCreateInput!): Course!
   createBatch(data: BatchCreateInput!): Batch!
-  createStage(data: StageCreateInput!): Stage!
-  createTopic(data: TopicCreateInput!): Topic!
   createUser(data: UserCreateInput!): User!
+  updateTopic(data: TopicUpdateInput!, where: TopicWhereUniqueInput!): Topic
+  updateStage(data: StageUpdateInput!, where: StageWhereUniqueInput!): Stage
   updateLearningProgram(data: LearningProgramUpdateInput!, where: LearningProgramWhereUniqueInput!): LearningProgram
   updateCourse(data: CourseUpdateInput!, where: CourseWhereUniqueInput!): Course
   updateBatch(data: BatchUpdateInput!, where: BatchWhereUniqueInput!): Batch
-  updateStage(data: StageUpdateInput!, where: StageWhereUniqueInput!): Stage
-  updateTopic(data: TopicUpdateInput!, where: TopicWhereUniqueInput!): Topic
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  deleteTopic(where: TopicWhereUniqueInput!): Topic
+  deleteStage(where: StageWhereUniqueInput!): Stage
   deleteLearningProgram(where: LearningProgramWhereUniqueInput!): LearningProgram
   deleteCourse(where: CourseWhereUniqueInput!): Course
   deleteBatch(where: BatchWhereUniqueInput!): Batch
-  deleteStage(where: StageWhereUniqueInput!): Stage
-  deleteTopic(where: TopicWhereUniqueInput!): Topic
   deleteUser(where: UserWhereUniqueInput!): User
+  upsertTopic(where: TopicWhereUniqueInput!, create: TopicCreateInput!, update: TopicUpdateInput!): Topic!
+  upsertStage(where: StageWhereUniqueInput!, create: StageCreateInput!, update: StageUpdateInput!): Stage!
   upsertLearningProgram(where: LearningProgramWhereUniqueInput!, create: LearningProgramCreateInput!, update: LearningProgramUpdateInput!): LearningProgram!
   upsertCourse(where: CourseWhereUniqueInput!, create: CourseCreateInput!, update: CourseUpdateInput!): Course!
   upsertBatch(where: BatchWhereUniqueInput!, create: BatchCreateInput!, update: BatchUpdateInput!): Batch!
-  upsertStage(where: StageWhereUniqueInput!, create: StageCreateInput!, update: StageUpdateInput!): Stage!
-  upsertTopic(where: TopicWhereUniqueInput!, create: TopicCreateInput!, update: TopicUpdateInput!): Topic!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  updateManyTopics(data: TopicUpdateInput!, where: TopicWhereInput): BatchPayload!
+  updateManyStages(data: StageUpdateInput!, where: StageWhereInput): BatchPayload!
   updateManyLearningPrograms(data: LearningProgramUpdateInput!, where: LearningProgramWhereInput): BatchPayload!
   updateManyCourses(data: CourseUpdateInput!, where: CourseWhereInput): BatchPayload!
   updateManyBatches(data: BatchUpdateInput!, where: BatchWhereInput): BatchPayload!
-  updateManyStages(data: StageUpdateInput!, where: StageWhereInput): BatchPayload!
-  updateManyTopics(data: TopicUpdateInput!, where: TopicWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
+  deleteManyTopics(where: TopicWhereInput): BatchPayload!
+  deleteManyStages(where: StageWhereInput): BatchPayload!
   deleteManyLearningPrograms(where: LearningProgramWhereInput): BatchPayload!
   deleteManyCourses(where: CourseWhereInput): BatchPayload!
   deleteManyBatches(where: BatchWhereInput): BatchPayload!
-  deleteManyStages(where: StageWhereInput): BatchPayload!
-  deleteManyTopics(where: TopicWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
@@ -951,23 +978,23 @@ type PageInfo {
 }
 
 type Query {
+  topics(where: TopicWhereInput, orderBy: TopicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Topic]!
+  stages(where: StageWhereInput, orderBy: StageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Stage]!
   learningPrograms(where: LearningProgramWhereInput, orderBy: LearningProgramOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LearningProgram]!
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course]!
   batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch]!
-  stages(where: StageWhereInput, orderBy: StageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Stage]!
-  topics(where: TopicWhereInput, orderBy: TopicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Topic]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  topic(where: TopicWhereUniqueInput!): Topic
+  stage(where: StageWhereUniqueInput!): Stage
   learningProgram(where: LearningProgramWhereUniqueInput!): LearningProgram
   course(where: CourseWhereUniqueInput!): Course
   batch(where: BatchWhereUniqueInput!): Batch
-  stage(where: StageWhereUniqueInput!): Stage
-  topic(where: TopicWhereUniqueInput!): Topic
   user(where: UserWhereUniqueInput!): User
+  topicsConnection(where: TopicWhereInput, orderBy: TopicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TopicConnection!
+  stagesConnection(where: StageWhereInput, orderBy: StageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StageConnection!
   learningProgramsConnection(where: LearningProgramWhereInput, orderBy: LearningProgramOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LearningProgramConnection!
   coursesConnection(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseConnection!
   batchesConnection(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BatchConnection!
-  stagesConnection(where: StageWhereInput, orderBy: StageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StageConnection!
-  topicsConnection(where: TopicWhereInput, orderBy: TopicOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TopicConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
@@ -984,6 +1011,7 @@ type Stage implements Node {
   videoUrl: String!
   order: Int!
   duration: Int!
+  topic: Topic!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -1004,11 +1032,20 @@ input StageCreateInput {
   videoUrl: String!
   order: Int!
   duration: Int!
+  topic: TopicCreateOneWithoutStagesInput!
 }
 
-input StageCreateManyInput {
-  create: [StageCreateInput!]
+input StageCreateManyWithoutTopicInput {
+  create: [StageCreateWithoutTopicInput!]
   connect: [StageWhereUniqueInput!]
+}
+
+input StageCreateWithoutTopicInput {
+  name: String!
+  transcript: String!
+  videoUrl: String!
+  order: Int!
+  duration: Int!
 }
 
 """An edge in a connection."""
@@ -1089,40 +1126,41 @@ input StageSubscriptionWhereInput {
   node: StageWhereInput
 }
 
-input StageUpdateDataInput {
-  name: String
-  transcript: String
-  videoUrl: String
-  order: Int
-  duration: Int
-}
-
 input StageUpdateInput {
   name: String
   transcript: String
   videoUrl: String
   order: Int
   duration: Int
+  topic: TopicUpdateOneRequiredWithoutStagesInput
 }
 
-input StageUpdateManyInput {
-  create: [StageCreateInput!]
+input StageUpdateManyWithoutTopicInput {
+  create: [StageCreateWithoutTopicInput!]
   connect: [StageWhereUniqueInput!]
   disconnect: [StageWhereUniqueInput!]
   delete: [StageWhereUniqueInput!]
-  update: [StageUpdateWithWhereUniqueNestedInput!]
-  upsert: [StageUpsertWithWhereUniqueNestedInput!]
+  update: [StageUpdateWithWhereUniqueWithoutTopicInput!]
+  upsert: [StageUpsertWithWhereUniqueWithoutTopicInput!]
 }
 
-input StageUpdateWithWhereUniqueNestedInput {
-  where: StageWhereUniqueInput!
-  data: StageUpdateDataInput!
+input StageUpdateWithoutTopicDataInput {
+  name: String
+  transcript: String
+  videoUrl: String
+  order: Int
+  duration: Int
 }
 
-input StageUpsertWithWhereUniqueNestedInput {
+input StageUpdateWithWhereUniqueWithoutTopicInput {
   where: StageWhereUniqueInput!
-  update: StageUpdateDataInput!
-  create: StageCreateInput!
+  data: StageUpdateWithoutTopicDataInput!
+}
+
+input StageUpsertWithWhereUniqueWithoutTopicInput {
+  where: StageWhereUniqueInput!
+  update: StageUpdateWithoutTopicDataInput!
+  create: StageCreateWithoutTopicInput!
 }
 
 input StageWhereInput {
@@ -1382,6 +1420,7 @@ input StageWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  topic: TopicWhereInput
 }
 
 input StageWhereUniqueInput {
@@ -1389,11 +1428,11 @@ input StageWhereUniqueInput {
 }
 
 type Subscription {
+  topic(where: TopicSubscriptionWhereInput): TopicSubscriptionPayload
+  stage(where: StageSubscriptionWhereInput): StageSubscriptionPayload
   learningProgram(where: LearningProgramSubscriptionWhereInput): LearningProgramSubscriptionPayload
   course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   batch(where: BatchSubscriptionWhereInput): BatchSubscriptionPayload
-  stage(where: StageSubscriptionWhereInput): StageSubscriptionPayload
-  topic(where: TopicSubscriptionWhereInput): TopicSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -1402,6 +1441,7 @@ type Topic implements Node {
   name: String!
   order: Int!
   stages(where: StageWhereInput, orderBy: StageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Stage!]
+  course: Course!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -1419,12 +1459,30 @@ type TopicConnection {
 input TopicCreateInput {
   name: String!
   order: Int!
-  stages: StageCreateManyInput
+  stages: StageCreateManyWithoutTopicInput
+  course: CourseCreateOneWithoutTopicsInput!
 }
 
-input TopicCreateManyInput {
-  create: [TopicCreateInput!]
+input TopicCreateManyWithoutCourseInput {
+  create: [TopicCreateWithoutCourseInput!]
   connect: [TopicWhereUniqueInput!]
+}
+
+input TopicCreateOneWithoutStagesInput {
+  create: TopicCreateWithoutStagesInput
+  connect: TopicWhereUniqueInput
+}
+
+input TopicCreateWithoutCourseInput {
+  name: String!
+  order: Int!
+  stages: StageCreateManyWithoutTopicInput
+}
+
+input TopicCreateWithoutStagesInput {
+  name: String!
+  order: Int!
+  course: CourseCreateOneWithoutTopicsInput!
 }
 
 """An edge in a connection."""
@@ -1496,36 +1554,55 @@ input TopicSubscriptionWhereInput {
   node: TopicWhereInput
 }
 
-input TopicUpdateDataInput {
-  name: String
-  order: Int
-  stages: StageUpdateManyInput
-}
-
 input TopicUpdateInput {
   name: String
   order: Int
-  stages: StageUpdateManyInput
+  stages: StageUpdateManyWithoutTopicInput
+  course: CourseUpdateOneRequiredWithoutTopicsInput
 }
 
-input TopicUpdateManyInput {
-  create: [TopicCreateInput!]
+input TopicUpdateManyWithoutCourseInput {
+  create: [TopicCreateWithoutCourseInput!]
   connect: [TopicWhereUniqueInput!]
   disconnect: [TopicWhereUniqueInput!]
   delete: [TopicWhereUniqueInput!]
-  update: [TopicUpdateWithWhereUniqueNestedInput!]
-  upsert: [TopicUpsertWithWhereUniqueNestedInput!]
+  update: [TopicUpdateWithWhereUniqueWithoutCourseInput!]
+  upsert: [TopicUpsertWithWhereUniqueWithoutCourseInput!]
 }
 
-input TopicUpdateWithWhereUniqueNestedInput {
-  where: TopicWhereUniqueInput!
-  data: TopicUpdateDataInput!
+input TopicUpdateOneRequiredWithoutStagesInput {
+  create: TopicCreateWithoutStagesInput
+  connect: TopicWhereUniqueInput
+  update: TopicUpdateWithoutStagesDataInput
+  upsert: TopicUpsertWithoutStagesInput
 }
 
-input TopicUpsertWithWhereUniqueNestedInput {
+input TopicUpdateWithoutCourseDataInput {
+  name: String
+  order: Int
+  stages: StageUpdateManyWithoutTopicInput
+}
+
+input TopicUpdateWithoutStagesDataInput {
+  name: String
+  order: Int
+  course: CourseUpdateOneRequiredWithoutTopicsInput
+}
+
+input TopicUpdateWithWhereUniqueWithoutCourseInput {
   where: TopicWhereUniqueInput!
-  update: TopicUpdateDataInput!
-  create: TopicCreateInput!
+  data: TopicUpdateWithoutCourseDataInput!
+}
+
+input TopicUpsertWithoutStagesInput {
+  update: TopicUpdateWithoutStagesDataInput!
+  create: TopicCreateWithoutStagesInput!
+}
+
+input TopicUpsertWithWhereUniqueWithoutCourseInput {
+  where: TopicWhereUniqueInput!
+  update: TopicUpdateWithoutCourseDataInput!
+  create: TopicCreateWithoutCourseInput!
 }
 
 input TopicWhereInput {
@@ -1686,6 +1763,7 @@ input TopicWhereInput {
   stages_every: StageWhereInput
   stages_some: StageWhereInput
   stages_none: StageWhereInput
+  course: CourseWhereInput
 }
 
 input TopicWhereUniqueInput {
