@@ -40,6 +40,7 @@ type Topic {
   name: String!
   order: Int!
   stages: [Stage!]!
+  course: Course!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -51,6 +52,7 @@ type Stage {
   videoUrl: String!
   order: Int!
   duration: Int!
+  topic: Topic!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
