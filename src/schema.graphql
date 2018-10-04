@@ -36,12 +36,14 @@ type Mutation {
     transcript: String!
     videoUrl: String!
     order: Int!
+    topicId: ID!
     #TODO: Get duration from video API maybe ?
     duration: Int!
   ): Stage!
   createTopic(
     name: String!
     order: Int!
+    courseId: ID!
   ): Topic!
   createUser(
     firstName: String!
