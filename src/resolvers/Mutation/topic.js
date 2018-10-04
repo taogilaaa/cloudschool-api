@@ -5,6 +5,7 @@ function createTopic(
   args: {
     name: string,
     order: number,
+    courseId: string,
   },
   context: Context,
   info: Info,
@@ -14,6 +15,7 @@ function createTopic(
       data: {
         name: args.name,
         order: args.order,
+        course: {connect: {id: args.courseId}},
       },
     },
     info,
